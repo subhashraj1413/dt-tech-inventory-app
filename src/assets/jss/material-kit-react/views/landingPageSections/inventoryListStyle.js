@@ -2,7 +2,7 @@ import { title } from "assets/jss/material-kit-react.js";
 
 const inventoryStyle = {
   section: {
-    minHeight: "400px",
+    minHeight: "850px",
     textAlign: "center"
   },
   title: {
@@ -15,14 +15,20 @@ const inventoryStyle = {
   },
   listItem:{
     marginBottom: "1rem",
-    marginTop: "30px",
+    marginTop: "1rem",
     backgroundColor: "#1976d2",
+    cursor: "pointer"
+  },
+  listItemDisable:{
+    marginBottom: "1rem",
+    marginTop: "1rem",
+    backgroundColor: "#f50057 ",
     cursor: "pointer"
   },
   selectedListItem:{
     marginBottom: "1rem",
-    marginTop: "30px",
-    backgroundColor: "#f50057",
+    marginTop: "1rem",
+    backgroundColor: "#16b990",
     cursor: "pointer"
   },
   listItemText:{
