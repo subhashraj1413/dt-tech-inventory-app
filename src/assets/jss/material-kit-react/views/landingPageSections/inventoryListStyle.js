@@ -13,11 +13,30 @@ const inventoryStyle = {
     textDecoration: "none",
     textAlign: "left",
   },
+  listItem:{
+    marginBottom: "1rem",
+    marginTop: "30px",
+    backgroundColor: "#1976d2",
+    cursor: "pointer"
+  },
+  selectedListItem:{
+    marginBottom: "1rem",
+    marginTop: "30px",
+    backgroundColor: "#f50057",
+    cursor: "pointer"
+  },
   listItemText:{
-    color: "#3C48"
+    color: "#fff"
+  },
+  icon:{
+    color: "#fff",
+    fontSize: "2rem",
   },
   description: {
-    color: "#999"
+    color: "#fff",
+    " p": {
+      color: "#fff"
+    }
   }
 };
 

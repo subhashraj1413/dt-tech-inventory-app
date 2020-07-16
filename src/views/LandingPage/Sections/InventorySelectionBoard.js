@@ -1,7 +1,9 @@
 import React from 'react';
+import { connect } from 'react-redux';
+
+
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
@@ -10,8 +12,9 @@ import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
-import TransformIcon from '@material-ui/icons/Transform';
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+
 
 import styles from "assets/jss/material-kit-react/views/landingPageSections/inventoryListStyle.js";
 
@@ -19,9 +22,13 @@ const useStyles = makeStyles(styles);
 
 
 
-export default function InventorySelectionBoard(props) {
+const InventorySelectionBoard = ({inventorySelectedList, dispatch}) => {
   const classes = useStyles();
-  const { inventorySelectedItems } = props;
+
+  const handleRemoveInventoryItems = inventoryId => {     
+
+    dispatch({ type: 'REMOVE_INVENTORY', id: inventoryId })
+  }
 
   return (
     <div className={classes.section}>
@@ -30,11 +37,11 @@ export default function InventorySelectionBoard(props) {
      <GridItem xs={12} sm={12} md={12}>     
         
           <List>
-            {inventorySelectedItems.map((item, i) => {
-              console.log(item);
+            { inventorySelectedList && inventorySelectedList.map((item, i) => {
+            
               return (
-                <ListItem key={i} draggable={props.draggable} 
-               
+                <ListItem key={i} draggable={item.draggable} 
+                className={classes.selectedListItem}               
                 >
                   <ListItemAvatar>
                     <Avatar>
@@ -44,11 +51,11 @@ export default function InventorySelectionBoard(props) {
                   <ListItemText
                     className={classes.listItemText}
                     primary={item.name}
-                    secondary={item.price || null}
+                    secondary={`AED ${item.price}` || null}
                   />
-                  <ListItemSecondaryAction>
-                    <IconButton edge="end" aria-label="delete">
-                      <TransformIcon />
+                  <ListItemSecondaryAction onClick={()=> { handleRemoveInventoryItems(item.invoiceId)}}>
+                    <IconButton edge="end" aria-label="delete" className={classes.icon}>
+                      <HighlightOffIcon />
                     </IconButton>
                   </ListItemSecondaryAction>
                 </ListItem>
@@ -63,3 +70,20 @@ export default function InventorySelectionBoard(props) {
     </div>
   );
 }
+
+const mapStateToProps = state => {
+  return {
+    inventorySelectedList: state.inventory.inventoryAddedItems,    
+  }
+ };
+ const mapDispatchToProps = (dispatch) => {
+   
+  return {
+    dispatch
+  }
+ }
+ 
+ export default connect(
+   mapStateToProps,
+   mapDispatchToProps
+ )(InventorySelectionBoard);

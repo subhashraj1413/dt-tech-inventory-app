@@ -1,8 +1,11 @@
 import React from "react";
+import { useDispatch, useStore } from 'react-redux';
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
+import { addInventory } from 'actions';
+
 
 // @material-ui/icons
 
@@ -11,18 +14,19 @@ import Header from "components/Header/Header.js";
 import Footer from "components/Footer/Footer.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
-import Button from "components/CustomButtons/Button.js";
 import HeaderLinks from "components/Header/HeaderLinks.js";
 import Parallax from "components/Parallax/Parallax.js";
+
 import Typography from "@material-ui/core/Typography";
-import List from "@material-ui/core/List";
 
 import styles from "assets/jss/material-kit-react/views/landingPage.js";
 
 // Sections for this page
 import InventoryList from "./Sections/InventoryList.js";
 import InventorySelectionBoard from "./Sections/InventorySelectionBoard.js";
-import { tree } from "gulp";
+import InventoryHeader from "./Sections/InventoryHeader.js";
+
+
 
 const dashboardRoutes = [];
 
@@ -31,20 +35,9 @@ const useStyles = makeStyles(styles);
 export default function LandingPage(props) {
   const classes = useStyles();
   const { ...rest } = props;
-  const [inventoryItems, setInventoryItems] = React.useState([
-    { invoiceId: "101", name: "Item 101", price: 50, draggable: true },
-    { invoiceId: "102", name: "Item 102", price: 100, draggable: true },
-    { invoiceId: "103", name: "Item 103", price: 150, draggable: true },
-    { invoiceId: "104", name: "Item 104", price: 200, draggable: true },
-    { invoiceId: "105", name: "Item 105", price: 250, draggable: true },
-  ]);
-  const [inventorySelectedItems, setInventorySelectedItems] = React.useState(
-    []
-  );
-
-  const onDragStart = (ev, id) => {
-    ev.dataTransfer.setData("id", id);
-  };
+  const dispatch = useDispatch()
+  const store = useStore();  
+  const {inventory: { inventoryListItems} } = store.getState();
 
   const onDragOver = (ev) => {
     ev.preventDefault();
@@ -52,13 +45,11 @@ export default function LandingPage(props) {
 
   const onDrop = (ev) => {
     let id = ev.dataTransfer.getData("id");
-    let [selectedItem] = inventoryItems.filter(item => item.invoiceId == id);
-    const mapInventorItems = inventoryItems.filter();
-    setInventorySelectedItems([
-      ...inventorySelectedItems,
-      selectedItem
-    ]);
+    let [selectedItem] = inventoryListItems.filter(item => item.invoiceId === id);    
+    dispatch(addInventory(selectedItem));      
+ 
   };
+
   return (
     <div>
       <Header
@@ -92,24 +83,19 @@ export default function LandingPage(props) {
       </Parallax>
       <div className={classNames(classes.main, classes.mainRaised)}>
         <div className={classes.container}>
+         
           <GridContainer>
+            
+          <GridItem xs={12} sm={12} md={12}>
+            <InventoryHeader />
+            </GridItem>
             <GridItem xs={12} sm={12} md={6}>
               <Typography variant="h6" className={classes.title}>
-                Inventory Selected Items
+                Inventory  Items
               </Typography>
-              <List>
-                {inventoryItems.map((item, i) => {
-                  return (
-                    <InventoryList
-                      id={item.invoiceId}
-                      key={i} 
-                      onDragStart={(e) =>onDragStart(e, item.invoiceId)}
-                      draggable
-                      {...item}
-                    />
-                  );
-                })}
-              </List>
+              
+              <InventoryList/>
+               
             </GridItem>
             <GridItem xs={12} sm={12} md={6}>
             <Typography variant="h6" className={classes.title}>
@@ -117,7 +103,7 @@ export default function LandingPage(props) {
             </Typography>
                 <div onDragOver={(e)=> onDragOver(e)}
                     onDrop={(e)=> onDrop(e)}>                    
-                     <InventorySelectionBoard inventorySelectedItems={inventorySelectedItems} />
+                     <InventorySelectionBoard />
               
                 </div>
             </GridItem>
