@@ -1,4 +1,4 @@
-# Foobar
+# DT Drag & Drop
 
 DT Drag & Drop is a React library for dealing with drag and Drop inventory modal.
 
